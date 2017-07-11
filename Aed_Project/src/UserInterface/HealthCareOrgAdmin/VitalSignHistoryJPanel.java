@@ -1,0 +1,440 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package UserInterface.HealthCareOrgAdmin;
+
+import Business.Locality.Locality;
+import Business.Patient.Patient;
+import Business.Patient.VitalSignSensor;
+import Business.Patient.VitalSignSensorHistory;
+import Business.Person.Person;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.util.ArrayList;
+import javafx.scene.chart.CategoryAxis;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+
+/**
+ *
+ * @author vega
+ */
+public class VitalSignHistoryJPanel extends javax.swing.JPanel {
+private Patient patient;
+    private JPanel userProcessContainer;
+    private Locality locality;
+    private Person person;
+    private VitalSignSensor vssh;
+    
+
+    public VitalSignHistoryJPanel(JPanel upc, Person person) {
+        initComponents();
+        this.userProcessContainer = upc;
+        this.person = person;
+        this.locality = locality;
+        this.vssh = vssh;
+        populateVitalSignTable();
+    }
+    private String VitalSignStatus(int patientAge, VitalSignSensor vitalSign) {
+        String vitalSignStatus = "Normal";
+
+        int respirationRate = vitalSign.getRespiratoryRate();
+        int heartRate = vitalSign.getHeartRate();
+        int bloodPressure = vitalSign.getBloodPressure();
+        float weight = vitalSign.getWeight();
+
+        /*Toddler*/
+        if (patientAge >= 1 && patientAge <= 3) {
+            if ((respirationRate < 20 || respirationRate > 30) /*Respiration Rate*/
+                    || (heartRate < 80 || heartRate > 130) /*Heart Rate*/
+                    || (bloodPressure < 80 || bloodPressure > 110) /*Blood Pressure*/
+                    || (weight < 22 || weight > 31)) /*Weight*/ {
+                vitalSignStatus = "Abnormal";
+            }
+        }
+        /*Preschooler*/
+        if (patientAge >= 4 && patientAge <= 5) {
+            if ((respirationRate < 30 || respirationRate > 40)
+                    || (heartRate < 80 || heartRate > 120)
+                    || (bloodPressure < 80 || bloodPressure > 110)
+                    || (weight < 31 || weight > 40)) {
+                vitalSignStatus = "Abnormal";
+            }
+        }
+        /*School Age*/
+        if (patientAge >= 6 && patientAge <= 12) {
+            if ((respirationRate < 30 || respirationRate > 40)
+                    || (heartRate < 85 || heartRate > 115)
+                    || (bloodPressure < 80 || bloodPressure > 120)
+                    || (weight < 41 || weight > 92)) {
+                vitalSignStatus = "Abnormal";
+            }
+        }
+        /*Adolescent*/
+        if (patientAge >= 13) {
+            if ((respirationRate < 12 || respirationRate > 20)
+                    || (heartRate < 55 || heartRate > 105)
+                    || (bloodPressure < 110 || bloodPressure > 120)
+                    || (weight < 110)) {
+                vitalSignStatus = "Abnormal";
+            }
+        }
+        
+         
+          return vitalSignStatus;
+    
+    
+}
+    private void populateVitalSignTable() {
+
+        DefaultTableModel model = (DefaultTableModel) viewVitalSignJTable.getModel();
+        model.setRowCount(0);
+        if (person != null) {
+            int patientAge = person.getPatient().getAge();
+              for(VitalSignSensorHistory vssh : person.getPatient().getVitalSignSensorList().getList())
+           {ArrayList<VitalSignSensor> vitalSignList = vssh.getHistory();
+           
+            if (vitalSignList.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No vital signs found. Please add vital signs", "Error", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            for (VitalSignSensor vitalSign : vssh.getHistory()) {
+                Object[] row = new Object[5];
+                row[0] = vitalSign;
+                row[2] = vitalSign.getRespiratoryRate();
+                row[1] = patientAge;
+                row[3] = vitalSign.getWeight();
+                row[4] = VitalSignStatus(patientAge, vitalSign);
+         // vitalSign.setStatus(VitalSignStatus(patientAge, vitalSign));
+                model.addRow(row);
+            }
+        }
+        }
+    }
+    
+
+    /**
+     * Creates new form VitalSignHistoryJPanel
+     */
+    
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        viewVitalSignJTable = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        deletejButton = new javax.swing.JButton();
+        viewVitalsjButton = new javax.swing.JButton();
+        chartsjButton = new javax.swing.JButton();
+        backjButton = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+
+        jMenu1.setText("File");
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("jMenu3");
+
+        jMenu4.setText("jMenu4");
+
+        setBackground(new java.awt.Color(231, 231, 253));
+
+        jLabel1.setFont(new java.awt.Font("Superclarendon", 1, 18)); // NOI18N
+        jLabel1.setText("Vital Signs for Patient : ");
+
+        viewVitalSignJTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Time Stamp", "Patient age", "Respiratory Rate", "Weight", "Status"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(viewVitalSignJTable);
+
+        jLabel2.setFont(new java.awt.Font("Superclarendon", 1, 18)); // NOI18N
+        jLabel2.setText("<value>");
+
+        deletejButton.setBackground(new java.awt.Color(51, 51, 255));
+        deletejButton.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        deletejButton.setForeground(new java.awt.Color(255, 255, 255));
+        deletejButton.setText("Delete Vital Sign");
+        deletejButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deletejButtonActionPerformed(evt);
+            }
+        });
+
+        viewVitalsjButton.setBackground(new java.awt.Color(51, 51, 255));
+        viewVitalsjButton.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        viewVitalsjButton.setForeground(new java.awt.Color(255, 255, 255));
+        viewVitalsjButton.setText("View/Edit Vital Sign");
+        viewVitalsjButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewVitalsjButtonActionPerformed(evt);
+            }
+        });
+
+        chartsjButton.setBackground(new java.awt.Color(51, 51, 255));
+        chartsjButton.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        chartsjButton.setForeground(new java.awt.Color(255, 255, 255));
+        chartsjButton.setText("Show Visual Charts");
+        chartsjButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chartsjButtonActionPerformed(evt);
+            }
+        });
+
+        backjButton.setBackground(new java.awt.Color(51, 51, 255));
+        backjButton.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        backjButton.setForeground(new java.awt.Color(255, 255, 255));
+        backjButton.setText("<< Back");
+        backjButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backjButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setIcon(new javax.swing.ImageIcon("/Users/vega/Downloads/phca_logo.png")); // NOI18N
+
+        jLabel9.setFont(new java.awt.Font("Silom", 0, 10)); // NOI18N
+        jLabel9.setText("National Pediatric Pneumonia Healthcare");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 649, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(83, 83, 83))))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(562, 562, 562)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(56, 56, 56)
+                        .addComponent(backjButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(107, 107, 107)
+                        .addComponent(viewVitalsjButton)
+                        .addGap(68, 68, 68)
+                        .addComponent(deletejButton)
+                        .addGap(39, 39, 39)
+                        .addComponent(chartsjButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(175, 175, 175)
+                        .addComponent(jLabel1)
+                        .addGap(33, 33, 33)
+                        .addComponent(jLabel2)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8)
+                .addGap(3, 3, 3)
+                .addComponent(jLabel9)
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addGap(41, 41, 41)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(viewVitalsjButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(deletejButton)
+                    .addComponent(chartsjButton))
+                .addGap(128, 128, 128)
+                .addComponent(backjButton, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void deletejButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletejButtonActionPerformed
+     int selectedRow = viewVitalSignJTable.getSelectedRow();
+    
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a row from table.", "Error", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+       
+
+        int flag= JOptionPane.showConfirmDialog(this, "Are you sure want to remove?","Warning", JOptionPane.YES_NO_OPTION);
+        if(flag==0)
+        {
+              for(VitalSignSensorHistory vssh : person.getPatient().getVitalSignSensorList().getList())
+            {
+                
+ VitalSignSensor vitalSign = (VitalSignSensor) viewVitalSignJTable.getValueAt(selectedRow, 0);
+ //VitalSignSensor vitalSign= vssh.deleteVitalSign(vitalSign);
+            
+             if(flag==0)
+        {
+            vssh.deleteVitalSign(vitalSign);
+            refreshVialSigns();
+        }
+            }
+        }   // TODO add your handling code here:
+    }//GEN-LAST:event_deletejButtonActionPerformed
+private void refreshVialSigns() {
+        int selectedRow = viewVitalSignJTable.getSelectedRow();
+        if (selectedRow < 0) {
+            populateVitalSignTable();
+        } else {
+               for(VitalSignSensorHistory vssh : person.getPatient().getVitalSignSensorList().getList())
+            {
+                
+             VitalSignSensor vitalSign = (VitalSignSensor) viewVitalSignJTable.getValueAt(selectedRow, 0);
+            Patient patient= person.getPatient();
+            if(patient!=null)
+            {
+                populateVitalSignTable();
+            }
+            else
+            {
+                populateVitalSignTable();
+            }
+        }
+        }
+    }
+
+    private void createChart()
+    {
+        DefaultCategoryDataset vitalSignDataset=new DefaultCategoryDataset();
+     
+              for(VitalSignSensorHistory vssh : person.getPatient().getVitalSignSensorList().getList())
+            {ArrayList<VitalSignSensor> vitalSignList = vssh.getHistory();
+
+       
+        /*At least 2 vital sign records needed to show chart */
+        if (vitalSignList.isEmpty() || vitalSignList.size() == 1) {
+            JOptionPane.showMessageDialog(this, "No vital signs or only one vital sign found. At least 2 vital sign records needed to show chart!", "Warning", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        for (VitalSignSensor vitalSign : vitalSignList) {
+            vitalSignDataset.addValue(vitalSign.getRespiratoryRate(),"RR", vitalSign.getTimestamp());
+            vitalSignDataset.addValue(vitalSign.getHeartRate(),"HR", vitalSign.getTimestamp());
+            vitalSignDataset.addValue(vitalSign.getBloodPressure(),"BP", vitalSign.getTimestamp());
+            vitalSignDataset.addValue(vitalSign.getWeight(),"WT", vitalSign.getTimestamp());
+        }
+        
+        JFreeChart vitalSignChart= ChartFactory.createBarChart3D("Vital Sign Chart", "Time Stamp", "Rate", vitalSignDataset, PlotOrientation.VERTICAL, true, false, false);
+        vitalSignChart.setBackgroundPaint(Color.white);
+        CategoryPlot vitalSignChartPlot = vitalSignChart.getCategoryPlot();
+        vitalSignChartPlot.setBackgroundPaint(Color.lightGray);    
+        
+       org.jfree.chart.axis.CategoryAxis vitalSignDomainAxis = vitalSignChartPlot.getDomainAxis();
+        vitalSignDomainAxis.setCategoryLabelPositions(
+            CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0)
+        );
+        
+        NumberAxis vitalSignRangeAxis = (NumberAxis) vitalSignChartPlot.getRangeAxis();
+        vitalSignRangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        
+        ChartFrame chartFrame = new ChartFrame("Chart", vitalSignChart);
+        chartFrame.setVisible(true);
+        chartFrame.setSize(500, 500);
+            }
+    }
+    
+    
+    
+    private void viewVitalsjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewVitalsjButtonActionPerformed
+int selectedRow = viewVitalSignJTable.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a row from table.", "Error", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        VitalSignSensor vitalSign = (VitalSignSensor) viewVitalSignJTable.getValueAt(selectedRow, 0);
+        ViewVitalSignJPanel vuvsJPanel = new ViewVitalSignJPanel(userProcessContainer, vitalSign, Boolean.FALSE);
+        userProcessContainer.add("vuvsJPanel", vuvsJPanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);        // TODO add your handling code here:
+    }//GEN-LAST:event_viewVitalsjButtonActionPerformed
+
+    private void chartsjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chartsjButtonActionPerformed
+ int selectedRow = viewVitalSignJTable.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a patient from table.", "Error", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        createChart();
+            // TODO add your handling code here:
+    }//GEN-LAST:event_chartsjButtonActionPerformed
+
+    private void backjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backjButtonActionPerformed
+ userProcessContainer.remove(this);
+         Component[] componentArray = userProcessContainer.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);        // TODO add your handling code here:
+    }//GEN-LAST:event_backjButtonActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton backjButton;
+    private javax.swing.JButton chartsjButton;
+    private javax.swing.JButton deletejButton;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable viewVitalSignJTable;
+    private javax.swing.JButton viewVitalsjButton;
+    // End of variables declaration//GEN-END:variables
+}
